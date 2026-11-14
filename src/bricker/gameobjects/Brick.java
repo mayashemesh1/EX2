@@ -21,4 +21,18 @@ public class Brick extends GameObject {
     public void onCollisionEnter(GameObject other, Collision collision){
         strategy.onCollision(this, other);
     }
+
+    /**
+     * @return the row of the brick in the bricks grid.
+     */
+    public int getRow() {
+        return row;
+    }
+
+    /**
+     * @return the column of the brick in the bricks grid.
+     */
+    public int getCol() {
+        return col;
+    }
 }

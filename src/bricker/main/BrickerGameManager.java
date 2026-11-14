@@ -11,6 +11,8 @@ import danogl.util.Vector2;
 import danogl.collisions.Layer;
 import danogl.components.CoordinateSpace;
 import java.awt.event.KeyEvent;
+import bricker.brick_strategies.CollisionStrategy;
+import bricker.brick_strategies.StrategyFactory;
 
 import java.util.Random;
 
@@ -29,6 +31,10 @@ public class BrickerGameManager extends GameManager{
 	private static final int BOUNDARY = 40;
 	private static final int TEXT_SIZE = 30;
 	private static final int LOCATION_X_TEXT = 100;
+	private static final float WINDOW_WIDTH = 700;
+	private static final float WINDOW_HEIGHT = 500;
+	private static final float PADDLE_BOTTOM_OFFSET = 30;
+	private static final float PUCK_SIZE_FACTOR = 0.75f;
 
 
 	private static final int DEFAULT_BRICKS_IN_ROW = 8;
@@ -59,7 +65,7 @@ public class BrickerGameManager extends GameManager{
 			BricksinRow = Integer.parseInt(args[0]);
 			rows = Integer.parseInt(args[1]);
 		}
-		new BrickerGameManager("Bricker", new Vector2(700, 500),
+		new BrickerGameManager("Bricker", new Vector2(WINDOW_WIDTH, WINDOW_HEIGHT),
 				BricksinRow, rows).run();
 	}
 
@@ -85,8 +91,12 @@ public class BrickerGameManager extends GameManager{
 		Renderable paddleImage = imageReader.readImage("assets/paddle.png", true);
 		setUserPaddle(paddleImage, inputListener);
 
-		//create brick
-		BasicCollisionStrategy strategy = new BasicCollisionStrategy(gameObjects(), brickCounter);
+
+		//create bricks
+		Renderable puckImage = imageReader.readImage("assets/mockBall.png", true);
+		Vector2 puckSize = new Vector2(BALL_RADIUS, BALL_RADIUS).mult(PUCK_SIZE_FACTOR);
+		StrategyFactory strategyFactory = new StrategyFactory(gameObjects(), brickCounter,
+				puckImage, collisionSound, puckSize, BALL_SPEED, windowDim);
 		Renderable brickImage =
 				imageReader.readImage("assets/brick.png", false);
 		float brickWidth = (windowDim.x() - (2 * WALL_WIDTH) - (BRICK_GAP * (this.numBricksinRow - 1))) / this.numBricksinRow;		for (int row = 0; row < this.numRows; row++) {
@@ -94,7 +104,7 @@ public class BrickerGameManager extends GameManager{
 				float x = WALL_WIDTH + (col * (brickWidth + BRICK_GAP));
 				float y = WALL_WIDTH + (row * (BRICK_HEIGHT + BRICK_GAP));
 				Vector2 position = new Vector2(x, y);
-				createBrick(brickImage, brickWidth, position, strategy);
+				createBrick(brickImage, brickWidth, position, row, col, strategyFactory.getStrategy());
 			}
 		}
 		//create graphic lives
@@ -168,11 +178,11 @@ public class BrickerGameManager extends GameManager{
 		ball.setVelocity(new Vector2(ballVelX, ballVelY));
 	}
 
-	private void createBrick(Renderable brickImage, float brickWidth, Vector2 position, BasicCollisionStrategy strategy){
-
-		GameObject brick = new Brick(position, new Vector2(brickWidth, BRICK_HEIGHT),
-				brickImage, 0, 0, strategy);
-		gameObjects().addGameObject(brick, danogl.collisions.Layer.STATIC_OBJECTS);
+	private void createBrick(Renderable brickImage, float brickWidth, Vector2 position,
+							 int row, int col, CollisionStrategy strategy) {
+		Brick brick = new Brick(position, new Vector2(brickWidth, BRICK_HEIGHT),
+				brickImage, row, col, strategy);
+		gameObjects().addGameObject(brick, Layer.STATIC_OBJECTS);
 	}
 	private void createBall(Renderable ballImage, Sound collisionSound){
 		this.ball = new Ball(new Vector2(0, 0), new Vector2(BALL_RADIUS, BALL_RADIUS), ballImage, collisionSound);

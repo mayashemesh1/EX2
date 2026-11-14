@@ -4,6 +4,7 @@ import bricker.gameobjects.Brick;
 import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
 import danogl.util.Counter;
+import danogl.collisions.Layer;
 
 public class BasicCollisionStrategy implements CollisionStrategy{
     private final GameObjectCollection gameObject;
@@ -17,8 +18,8 @@ public class BasicCollisionStrategy implements CollisionStrategy{
 
     @Override
     public void onCollision(Brick brick, GameObject collider) {
-        this.gameObject.removeGameObject(brick, danogl.collisions.Layer.STATIC_OBJECTS);
-        this.counterBricks.decrement();
-
+        if (this.gameObject.removeGameObject(brick, Layer.STATIC_OBJECTS)) {
+            this.counterBricks.decrement();
+        }
     }
 }
