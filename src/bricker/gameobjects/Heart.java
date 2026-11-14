@@ -6,6 +6,11 @@ import danogl.collisions.GameObjectCollection;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Counter;
 import danogl.util.Vector2;
+/**
+ * A falling heart. When the main paddle collects it, the player gets an extra life
+ * (up to a maximal number of lives). The heart collides only with the main paddle,
+ * and is removed from the game if it leaves the window.
+ */
 
 public class Heart extends GameObject {
     private final GameObject mainPaddle;

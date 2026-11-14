@@ -6,6 +6,10 @@ import danogl.collisions.Layer;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Counter;
 import danogl.util.Vector2;
+/**
+ * A graphic display of the player's lives, shown as a row of hearts.
+ * The display updates itself according to the lives counter, adding or removing hearts.
+ */
 
 public class GraphicDisplay extends GameObject {
     private static final float GAP_HEARTS = 5;
@@ -16,6 +20,16 @@ public class GraphicDisplay extends GameObject {
     private final Renderable heartImage;
     private final Vector2 heartDimensions;
 
+    /**
+     * Constructs the graphic lives display.
+     *
+     * @param topLeftCorner position of the first heart's top-left corner, in window coordinates.
+     * @param dimensions    width and height of each heart.
+     * @param renderable    the image of a heart.
+     * @param gameObjects   the game's object collection, used to add and remove hearts.
+     * @param livesNum      counter of the player's lives.
+     * @param maxLives      the maximal number of lives in the game.
+     */
     public GraphicDisplay(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable,
                           GameObjectCollection gameObjects, Counter livesNum, int maxLives) {
         super(topLeftCorner, dimensions, null);

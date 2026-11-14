@@ -9,6 +9,10 @@ import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
 import java.util.Random;
+/**
+ * A collision strategy that breaks the brick and creates two pucks at the brick's center,
+ * each moving in a random direction on the upper half of the unit circle.
+ */
 
 public class PuckStrategy implements CollisionStrategy{
 	private static final int NUM_PUCKS = 2;

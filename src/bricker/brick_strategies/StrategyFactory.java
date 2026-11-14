@@ -10,6 +10,12 @@ import bricker.gameobjects.Brick;
 import danogl.GameObject;
 
 import java.util.Random;
+/**
+ * Creates the collision strategies of the game and randomly chooses one for each brick:
+ * the basic strategy with probability 1/2, and each of the four special strategies
+ * with probability 1/8.
+ * Each strategy is created once, and all the bricks with the same behavior share it.
+ */
 
 public class StrategyFactory {
 	private static final int NUM_SPECIAL_STRATEGIES = 4;
@@ -40,7 +46,11 @@ public class StrategyFactory {
 	 * @param borderWidth      width of the walls at the window's edges.
 	 * @param explosionSound   the sound played when a brick explodes.
 	 * @param bricks           grid of all the bricks in the game, by row and column.
-	 *
+	 * @param heartImage       the image of a heart.
+	 * @param heartSize        width and height of a heart.
+	 * @param mainPaddle       the main paddle, the only object that can collect hearts.
+	 * @param livesCounter     counter of the player's lives.
+	 * @param maxLives         the maximal number of lives in the game.
 	 */
 	public StrategyFactory(GameObjectCollection gameObjects, Counter bricksCounter,
 						   Renderable puckImage, Sound collisionSound, Vector2 puckSize,

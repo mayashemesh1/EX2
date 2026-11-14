@@ -4,6 +4,10 @@ import danogl.collisions.GameObjectCollection;
 import danogl.gui.Sound;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
+/**
+ * An extra ball created when a puck brick breaks. It behaves like a regular ball,
+ * but when it leaves the window it is removed from the game without affecting the lives.
+ */
 
 public class Puck extends  Ball {
 	private final GameObjectCollection gameObjects;
