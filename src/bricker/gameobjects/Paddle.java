@@ -11,11 +11,15 @@ public class Paddle extends GameObject {
 
 	private static final float MOVEMENT_SPEED = 300;
 	private final UserInputListener inputListener;
+	private final float windowWidth;
+	private final float borderWidth;
 
 
-	public Paddle(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable, UserInputListener inputListener) {
+	public Paddle(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable, UserInputListener inputListener,  Vector2 windowDimensions, float borderWidth) {
 		super(topLeftCorner, dimensions, renderable);
 		this.inputListener = inputListener;
+		this.windowWidth = windowDimensions.x();
+		this.borderWidth = borderWidth;
 	}
 
 	@Override
@@ -36,9 +40,10 @@ public class Paddle extends GameObject {
 
 	private void keepInsideWindow() {
 		Vector2 topLeft = getTopLeftCorner();
-		float maxX = 700 - getDimensions().x();
-		if (topLeft.x() < 0) {
-			setTopLeftCorner(new Vector2(0, topLeft.y()));
+		float minX = borderWidth;
+		float maxX = windowWidth - borderWidth - getDimensions().x();
+		if (topLeft.x() < minX) {
+			setTopLeftCorner(new Vector2(minX, topLeft.y()));
 		} else if (topLeft.x() > maxX) {
 			setTopLeftCorner(new Vector2(maxX, topLeft.y()));
 		}

@@ -13,14 +13,18 @@ public class GraphicDisplay extends GameObject {
     private GameObject[] heartsList;
     private int numLives;
     private Counter livesCounter;
+    private final Renderable heartImage;
+    private final Vector2 heartDimensions;
 
     public GraphicDisplay(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable,
-                          GameObjectCollection gameObjects, Counter livesNum) {
+                          GameObjectCollection gameObjects, Counter livesNum, int maxLives) {
         super(topLeftCorner, dimensions, null);
         this.livesCounter = livesNum;
         this.numLives =livesCounter.value();
         this.gameObjects = gameObjects;
-        this.heartsList = new GameObject[numLives];
+        this.heartsList = new GameObject[maxLives];
+        this.heartImage = renderable;
+        this.heartDimensions = dimensions;
         for (int i = 0; i < numLives; i++) {
             float x = topLeftCorner.x() + (i * (dimensions.x() + GAP_HEARTS));
             Vector2 heartPosition = new Vector2(x, topLeftCorner.y());
@@ -31,14 +35,40 @@ public class GraphicDisplay extends GameObject {
 
     }
 
+    /**
+     * Adds or removes hearts so the number of hearts matches the lives counter.
+     *
+     * @param deltaTime time passed since the last frame, in seconds.
+     */
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-        if (this.livesCounter.value()<this.numLives){
-            GameObject lastHeart = this.heartsList[numLives-1];
-            this.gameObjects.removeGameObject(lastHeart, danogl.collisions.Layer.UI);
-            this.heartsList[numLives-1] = null;
-            this.numLives--;
+        while (this.numLives < this.livesCounter.value()) {
+            addHeart();
         }
+        while (this.numLives > this.livesCounter.value()) {
+            removeHeart();
+        }
+    }
+
+    /*
+     * Adds a heart at the end of the row.
+     */
+    private void addHeart() {
+        float x = getTopLeftCorner().x() + (this.numLives * (this.heartDimensions.x() + GAP_HEARTS));
+        Vector2 heartPosition = new Vector2(x, getTopLeftCorner().y());
+        GameObject heart = new GameObject(heartPosition, this.heartDimensions, this.heartImage);
+        this.heartsList[this.numLives] = heart;
+        this.gameObjects.addGameObject(heart, Layer.UI);
+        this.numLives++;
+    }
+
+    /*
+     * Removes the last heart in the row.
+     */
+    private void removeHeart() {
+        this.numLives--;
+        this.gameObjects.removeGameObject(this.heartsList[this.numLives], Layer.UI);
+        this.heartsList[this.numLives] = null;
     }
 }

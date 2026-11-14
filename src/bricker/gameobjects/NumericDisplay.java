@@ -28,7 +28,7 @@ public class NumericDisplay extends GameObject {
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-        if (this.livesCounter.value()<this.numLives){
+        if (this.livesCounter.value() != this.numLives){
             this.numLives--;
             this.textRenderable.setString(String.valueOf(this.numLives));
             fitColor();
